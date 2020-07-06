@@ -25,7 +25,7 @@ namespace HitomiApi
             "Initializing GC".Info(LogSource);
             GCTimer.Initialize();
             "Starting GC".Info(LogSource);
-            GCTimer.Stop();
+            GCTimer.Start();
             "Bootstrap Done.".Info(LogSource);
 
             await Task.Delay(-1);
