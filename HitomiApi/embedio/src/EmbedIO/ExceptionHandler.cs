@@ -131,7 +131,7 @@ namespace EmbedIO
                 return;
             }
 
-            exception.Log(logSource, $"[{context.Id}] Unhandled exception.");
+            //EXC exception.Log(logSource, $"[{context.Id}] Unhandled exception.");
 
             try
             {
