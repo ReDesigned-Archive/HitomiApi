@@ -28,7 +28,7 @@ jobs:
     - name: Publish
       run: |
            cd HitomiApi
-           dotnet publish -c Release --self-contained -r ubuntu.18.04-x64
+           dotnet publish -c Release -f=netcoreapp3.1 --self-contained -r ubuntu.18.04-x64
     - name: Test
       run: |
            cd HitomiApi
