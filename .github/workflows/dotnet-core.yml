@@ -18,14 +18,18 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Install dependencies
-      run: cd HitomiApi
+      run: |
+           cd HitomiApi
            dotnet restore
     - name: Build
-      run: cd HitomiApi
+      run: |
+           cd HitomiApi
            dotnet build --configuration Release --no-restore
     - name: Publish
-      run: cd HitomiApi
+      run: |
+           cd HitomiApi
            dotnet publish -c Release --self-contained -r ubuntu.18.04-x64
     - name: Test
-      run: cd HitomiApi
+      run: |
+           cd HitomiApi
            dotnet test --no-restore --verbosity normal
