@@ -30,6 +30,7 @@ namespace HitomiApi
         private static async Task RunGC(object sender, ElapsedEventArgs e)
         {
             GC.Collect();
+            GC.WaitForPendingFinalizers();
             "GC Done".Info("GCTimer");
         }
     }

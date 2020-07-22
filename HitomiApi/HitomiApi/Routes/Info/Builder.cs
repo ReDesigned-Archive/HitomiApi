@@ -20,7 +20,7 @@ namespace HitomiApi.Routes.Info
 
             HashDecode decoder = new HashDecode();
             List<string> images = new List<string>();
-            List<string> ProxyedImages = new List<string>();
+            List<string> ProxiedImages = new List<string>();
 
             foreach (var img in obj["files"])
             {
@@ -32,31 +32,51 @@ namespace HitomiApi.Routes.Info
                 imgmodel.Height = img["height"].Value<int>();
 
                 images.Add(decoder.Image_Url_From_Image(id, imgmodel, false));
-                ProxyedImages.Add($"{Program.ApiUrl}/image/proxy?url=" + decoder.Image_Url_From_Image(id, imgmodel, false));
+                ProxiedImages.Add($"{Program.ApiUrl}/image/proxy?url=" + decoder.Image_Url_From_Image(id, imgmodel, false));
             }
-            List<TagModel> Tags = new List<TagModel>();
+
+            List<string> Tags = new List<string>();
             foreach (JObject t in obj["tags"])
             {
-                var tagmodel = new TagModel();
                 JToken a;
-                if (t.TryGetValue("female", out a))
+                if (!t.TryGetValue("female", out a) && !t.TryGetValue("male", out a))
                 {
-                    tagmodel.Female = true;
+                    Tags.Add(t["tag"].Value<string>());
+                    continue;
                 }
-                if (t.TryGetValue("male", out a))
+                if (t.TryGetValue("female", out a) && a.Value<string>() == "1")
                 {
-                    tagmodel.Male = true;
+                    Tags.Add($"female:{t["tag"].Value<string>()}");
                 }
-                tagmodel.Name = t["tag"].Value<string>();
-                Tags.Add(tagmodel);
+                if (t.TryGetValue("male", out a) && a.Value<string>() == "1")
+                {
+                    Tags.Add($"male:{t["tag"].Value<string>()}");
+                }
             }
+
+            // List<TagModel> Tags = new List<TagModel>();
+            // foreach (JObject t in obj["tags"])
+            // {
+            //     var tagmodel = new TagModel();
+            //     JToken a;
+            //     if (t.TryGetValue("female", out a) && a.Value<string>() == "1")
+            //     {
+            //         tagmodel.Female = true;
+            //     }
+            //     if (t.TryGetValue("male", out a) && a.Value<string>() == "1")
+            //     {
+            //         tagmodel.Male = true;
+            //     }
+            //     tagmodel.Name = t["tag"].Value<string>();
+            //     Tags.Add(tagmodel);
+            // }
 
             model.Title = obj["title"].Value<string>();
             model.Type = obj["type"].Value<string>();
 
-            model.Tags = new ReadOnlyCollection<TagModel>(Tags);
+            model.Tags = new ReadOnlyCollection<string>(Tags);
             model.Images = new ReadOnlyCollection<string>(images);
-            model.ProxyedImages = new ReadOnlyCollection<string>(ProxyedImages);
+            model.ProxiedImages = new ReadOnlyCollection<string>(ProxiedImages);
             return model;
         }
     }
